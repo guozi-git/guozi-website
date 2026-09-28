@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700">
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#142c48"/><stop offset=".55" stop-color="#236b7d"/><stop offset="1" stop-color="#83b9b4"/></linearGradient>
+ <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse"><path d="M56 0H0V56" fill="none" stroke="#e0f9ff" stroke-opacity=".12"/></pattern>
+ <radialGradient id="glow"><stop stop-color="#abf9e9" stop-opacity=".3"/><stop offset="1" stop-color="#abf9e9" stop-opacity="0"/></radialGradient>
+</defs>
+<path fill="url(#bg)" d="M0 0h1600v700H0z"/><path fill="url(#grid)" d="M0 0h1600v700H0z"/>
+<ellipse cx="1180" cy="290" rx="440" ry="390" fill="url(#glow)"/>
+<g fill="none" stroke="#c9fff4" stroke-opacity=".6" stroke-width="2">
+ <ellipse cx="1140" cy="350" rx="245" ry="245"/><ellipse cx="1140" cy="350" rx="170" ry="170" stroke-dasharray="5 12"/>
+ <path d="M820 350h640M1140 40v610M925 230l370 235-270 86 235-338-335 17 100 321M925 230l370 235-35-252-235 338"/>
+</g>
+<g fill="#d9fff5"><circle cx="925" cy="230" r="9"/><circle cx="1295" cy="465" r="9"/><circle cx="1025" cy="551" r="9"/><circle cx="1260" cy="213" r="9"/><circle cx="1140" cy="350" r="6"/></g>
+</svg>
