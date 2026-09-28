@@ -72,6 +72,7 @@ export function Orbit() {
   const closeRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const busyRef = useRef(false);
+  const pendingCloseRef = useRef(false);
   const pushedRef = useRef(false);
   const activeRef = useRef<typeof active>(null);
   const animationsRef = useRef<Animation[]>([]);
@@ -80,6 +81,7 @@ export function Orbit() {
   async function transition(next: typeof active) {
     if (next?.id === activeRef.current?.id) return;
     const sequence = ++sequenceRef.current;
+    pendingCloseRef.current = false;
     animationsRef.current.forEach((animation) => animation.cancel());
     animationsRef.current = [];
     const section = next ?? activeRef.current;
@@ -179,6 +181,10 @@ export function Orbit() {
     animationsRef.current.forEach((animation) => animation.cancel());
     animationsRef.current = [];
     busyRef.current = false;
+    if (pendingCloseRef.current) {
+      pendingCloseRef.current = false;
+      close();
+    }
   }
 
   function open(section: (typeof sections)[number], button: HTMLButtonElement) {
@@ -190,7 +196,12 @@ export function Orbit() {
   }
 
   function close() {
-    if (busyRef.current) return;
+    if (!activeRef.current) return;
+    if (busyRef.current) {
+      // Preserve a return request made while the entrance animation is running.
+      pendingCloseRef.current = true;
+      return;
+    }
     if (pushedRef.current) {
       window.history.go(
         window.history.state?.publicationDetail ||

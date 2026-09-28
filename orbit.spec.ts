@@ -262,6 +262,28 @@ test('opening and closing include visible intermediate geometry', async ({ page 
   await expect(page.getByRole('dialog')).toHaveCount(0);
 });
 
+test('Escape during opening is preserved, including repeated presses', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const trigger = page.getByRole('button', { name: '打开兴趣爱好', exact: true });
+  await trigger.click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.evaluate(() => {
+    const panel = document.querySelector('[role="dialog"]')!;
+    if (!panel.getAnimations({ subtree: true }).some((a) => a.playState === 'running')) {
+      throw new Error('Expected an opening animation');
+    }
+    for (let i = 0; i < 3; i++) {
+      panel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    }
+  });
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await expect(page).toHaveURL(/\/$/);
+  await page.goForward();
+  await expect(page.getByRole('dialog')).toBeVisible();
+});
+
 test('five entrances, return, keyboard focus and browser history', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
