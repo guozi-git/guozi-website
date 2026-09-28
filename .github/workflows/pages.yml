@@ -34,6 +34,8 @@ jobs:
       - name: Verify actual Pages path
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
+          INDEX_SITE: 'true'
         run: |
           npm start > /tmp/website-preview.log 2>&1 &
           for attempt in $(seq 1 30); do

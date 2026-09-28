@@ -14,6 +14,8 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: '1'
       NEXT_PUBLIC_BASE_PATH: ${{ matrix.base_path }}
+      NEXT_PUBLIC_SITE_URL: ${{ matrix.base_path != '' && format('https://{0}.github.io{1}', github.repository_owner, matrix.base_path) || '' }}
+      INDEX_SITE: ${{ matrix.base_path != '' && 'true' || 'false' }}
       BROWSER_CHANNEL: chromium
     steps:
       - uses: actions/checkout@v4

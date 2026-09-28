@@ -101,6 +101,19 @@ try {
     expect((await page.request.get(new URL(path, site).href)).status()).toBe(200);
   }
   const share = new URL(await page.locator('meta[property="og:image"]').getAttribute('content'));
+  const publicUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (publicUrl) {
+    const canonical = `${publicUrl.replace(/\/$/, '')}/`;
+    expect(await page.locator('link[rel="canonical"]').getAttribute('href')).toBe(canonical);
+    expect(await page.locator('meta[property="og:url"]').getAttribute('content')).toBe(canonical);
+    expect(share.href).toBe(new URL('share-cover.png', canonical).href);
+  } else {
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  }
+  expect(await page.locator('meta[name="robots"]').getAttribute('content')).toBe(
+    publicUrl && process.env.INDEX_SITE === 'true' ? 'index, follow' : 'noindex, follow',
+  );
+  expect(await page.locator('meta[name="twitter:image"]').getAttribute('content')).toBe(share.href);
   expect(share.pathname).toBe(`${site.pathname}share-cover.png`);
   expect((await page.request.get(new URL(share.pathname, site.origin).href)).status()).toBe(200);
   expect((await page.request.get(new URL('devices/setup.png', site).href)).status()).toBe(404);
